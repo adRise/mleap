@@ -1,0 +1,59 @@
+name: Prepare Node.js
+description: "Common steps for preparing Node.js environment"
+
+inputs:
+  cache:
+    description: "The package manager type"
+    required: false
+  cache-dependency-path:
+    description: "The path to the package manager lockfile"
+    required: false
+  node-version:
+    description: "The version of Node.js to use"
+    required: false
+  node-version-file:
+    description: "The version file of Node.js to use"
+    required: false
+  npm-auth-token:
+    description: 'The auth token of "@adrise" scoped packages'
+    required: true
+  working-directory:
+    description: "The path to the working directory"
+    required: false
+
+runs:
+  using: composite
+  steps:
+    - name: Install Corepack
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+        node-version-file: ${{ inputs.node-version-file }}
+
+    - name: Set up Corepack
+      run: |
+        corepack enable
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        cache: ${{ inputs.cache }}
+        cache-dependency-path: ${{ inputs.cache-dependency-path }}
+        node-version: ${{ inputs.node-version }}
+        node-version-file: ${{ inputs.node-version-file }}
+
+    - name: Set up Yarn
+      run: |
+        yarn config set npmScopes.adrise.npmAlwaysAuth true
+        yarn config set npmScopes.adrise.npmAuthToken "${{ inputs.npm-auth-token }}"
+        yarn config set npmScopes.adrise.npmRegistryServer "https://npm.pkg.github.com"
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+
+    - name: Install dependencies
+      run: |
+        yarn install --immutable
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
