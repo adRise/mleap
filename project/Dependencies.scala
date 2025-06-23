@@ -1,13 +1,15 @@
 package ml.combust.mleap
 
-import sbt._
-import Keys._
+import sbt.*
+import Keys.*
+
+import scala.util.matching.Regex
 
 object Dependencies {
   import DependencyHelpers._
 
-  val sparkVersion = "3.4.0"
-  val scalaTestVersion = "3.2.16"
+  val sparkVersion = "3.5.6"
+  val scalaTestVersion = "3.2.19"
   val scalaPbJson4sVersion = "0.11.1"
   val junitVersion = "5.9.2"
   val akkaVersion = "2.6.21" // Stay below akka v2.7.0 since they swapped to a BSL license
@@ -35,9 +37,9 @@ object Dependencies {
       "org.apache.spark" %% "spark-catalyst" % sparkVersion,
       "org.apache.spark" %% "spark-avro" % sparkVersion
     )
-    val avroDep = "org.apache.avro" % "avro" % "1.11.1"
+    val avroDep = "org.apache.avro" % "avro" % "1.12.0"
     val sprayJson = "io.spray" %% "spray-json" % "1.3.6"
-    val config = "com.typesafe" % "config" % "1.4.2"
+    val config = "com.typesafe" % "config" % "1.4.3"
     val scalaReflect = ScalaVersionDependentModuleID.versioned("org.scala-lang" % "scala-reflect" % _)
     val scalaTest = "org.scalatest" %% "scalatest" % scalaTestVersion
     val jTransform = "com.github.rwl" % "jtransforms" % "2.4.0" exclude("junit", "junit")

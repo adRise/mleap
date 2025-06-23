@@ -1,4 +1,6 @@
+/.vscode
 /.idea
+.metals/
 .idea/
 target/
 tmp/
@@ -10,3 +12,4 @@ unsafe.*
 .sbtopts
 .DS_Store
 .bsp/
+.bloop/
