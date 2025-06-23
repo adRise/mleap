@@ -1,16 +1,17 @@
 package ml.combust.mleap
 
-import sbt._
-import Keys._
-import com.jsuereth.sbtpgp.SbtPgp.autoImport._
-import com.jsuereth.sbtpgp.PgpKeys._
-import sbtrelease.ReleasePlugin.autoImport._
-import xerial.sbt.Sonatype.autoImport._
+import sbt.*
+import Keys.*
+import com.jsuereth.sbtpgp.SbtPgp.autoImport.*
+import com.jsuereth.sbtpgp.PgpKeys.*
+import com.tubitv.sbt_global_settings.TubiCodeArtifactPlugin.autoImport.codeArtifactPublish
+import sbtrelease.ReleasePlugin.autoImport.*
+import xerial.sbt.Sonatype.autoImport.*
 
 object Common {
-  lazy val defaultMleapSettings = defaultSettings ++ mleapSettings ++ sonatypeSettings
-  lazy val defaultBundleSettings = defaultSettings ++ bundleSettings ++ sonatypeSettings
-  lazy val defaultMleapXgboostSparkSettings = defaultMleapSettings ++ sonatypeSettings
+  lazy val defaultMleapSettings = defaultSettings ++ mleapSettings
+  lazy val defaultBundleSettings = defaultSettings ++ bundleSettings
+  lazy val defaultMleapXgboostSparkSettings = defaultMleapSettings
   lazy val defaultMleapServingSettings = defaultMleapSettings ++ noPublishSettings
 
 
@@ -25,15 +26,7 @@ object Common {
       "org.scala-lang.modules" %% "scala-collection-compat" % VersionScheme.Always,
     resolvers += Resolver.mavenLocal,
     resolvers += Resolver.jcenterRepo,
-    resolvers ++= {
-      // Only add Sonatype Snapshots if this version itself is a snapshot version
-      if (isSnapshot.value) {
-        Resolver.sonatypeOssRepos("snapshots") :+
-          ("ASF Snapshots" at "https://repository.apache.org/content/groups/snapshots")
-      } else {
-        Seq()
-      }
-    }
+    publish := codeArtifactPublish.value
   )
 
   lazy val mleapSettings: Seq[Def.Setting[_]] = Seq(organization := "ml.combust.mleap")
