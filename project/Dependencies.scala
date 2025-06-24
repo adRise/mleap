@@ -6,9 +6,10 @@ import Keys.*
 import scala.util.matching.Regex
 
 object Dependencies {
+
   import DependencyHelpers._
 
-  val sparkVersion = "3.5.6"
+  val sparkVersion = "4.0.0"
   val scalaTestVersion = "3.2.19"
   val scalaPbJson4sVersion = "0.11.1"
   val junitVersion = "5.9.2"
@@ -17,20 +18,19 @@ object Dependencies {
   val springBootVersion = "2.7.0"
   lazy val logbackVersion = "1.2.3"
   lazy val loggingVersion = "3.9.5"
-  lazy val slf4jVersion = "2.0.6"
+  lazy val slf4jVersion = "2.0.17"
   lazy val awsSdkVersion = "1.12.470"
   lazy val scalaCollectionCompat = "2.12.0"
-  val tensorflowJavaVersion = "0.5.0" // Match Tensorflow 2.10.1 https://github.com/tensorflow/java/#tensorflow-version-support
-  val xgboostVersion = "2.0.3"
+  val tensorflowJavaVersion = "1.1.0" // Match Tensorflow 2.10.1 https://github.com/tensorflow/java/#tensorflow-version-support
+  val xgboostVersion = "2.1.4"
   val breezeVersion = "2.1.0"
   val hadoopVersion = "3.3.4" // matches spark version
   val platforms = "windows-x86_64,linux-x86_64,macosx-x86_64"
-  val tensorflowPlatforms : Array[String] =  sys.env.getOrElse("TENSORFLOW_PLATFORMS", platforms).split(",")
 
   object Compile {
     val `scala-collection-compat` = "org.scala-lang.modules" %% "scala-collection-compat" % scalaCollectionCompat
-    val sparkMllibLocal = "org.apache.spark" %% "spark-mllib-local" % sparkVersion excludeAll(ExclusionRule(organization = "org.scalatest"))
-    val spark = Seq("org.apache.spark" %% "spark-core" % sparkVersion,
+    val sparkMllibLocal = "org.apache.spark" %% "spark-mllib-local" % sparkVersion excludeAll (ExclusionRule(organization = "org.scalatest"))
+    val spark: Seq[ModuleID] = Seq("org.apache.spark" %% "spark-core" % sparkVersion,
       "org.apache.spark" %% "spark-sql" % sparkVersion,
       "org.apache.spark" %% "spark-mllib" % sparkVersion,
       "org.apache.spark" %% "spark-mllib-local" % sparkVersion,
@@ -44,8 +44,9 @@ object Dependencies {
     val scalaTest = "org.scalatest" %% "scalatest" % scalaTestVersion
     val jTransform = "com.github.rwl" % "jtransforms" % "2.4.0" exclude("junit", "junit")
     var tensorflowCoreApi = "org.tensorflow" % "tensorflow-core-api" % tensorflowJavaVersion
-    (Seq("") ++ tensorflowPlatforms).foreach(platform => tensorflowCoreApi = tensorflowCoreApi classifier platform)
-    val tensorflowDeps = Seq(tensorflowCoreApi)
+    val tensorflowProto = "org.tensorflow" % "proto" % "1.15.0"
+    val tensorflowNative = "org.tensorflow" % "tensorflow-core-native" % tensorflowJavaVersion
+    val tensorflowDeps = Seq(tensorflowCoreApi, tensorflowProto, tensorflowNative)
     val akkaTestKit = "com.typesafe.akka" %% "akka-testkit" % akkaVersion
     val akkaStreamTestKit = "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion
 
@@ -84,17 +85,17 @@ object Dependencies {
 
     val xgboostDep = "ml.dmlc" %% "xgboost4j" % xgboostVersion exclude("org.scala-lang.modules", "scala-collection-compat_2.12")
     val xgboostSparkDep = "ml.dmlc" %% "xgboost4j-spark" % xgboostVersion exclude("org.scala-lang.modules", "scala-collection-compat_2.12") exclude("ml.dmlc", "xgboost4j_2.12")
-    val xgboostPredictorDep = "ai.h2o" % "xgboost-predictor" % "0.3.18" exclude("com.esotericsoftware.kryo", "kryo")
+    val xgboostPredictorDep = "ai.h2o" % "xgboost-predictor" % "0.3.20"
 
     val hadoop = "org.apache.hadoop" % "hadoop-client" % hadoopVersion
 
     val slf4jDep = "org.slf4j" % "slf4j-log4j12" % slf4jVersion
-    val scalapbCompilerPlugin =  "com.thesamet.scalapb" %% "compilerplugin" % "0.11.13"
+    val scalapbCompilerPlugin = "com.thesamet.scalapb" %% "compilerplugin" % "0.11.13"
   }
 
   object Test {
     val scalaTest = Compile.scalaTest % "test"
-    val akkaHttpTestkit =  "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % "test"
+    val akkaHttpTestkit = "com.typesafe.akka" %% "akka-http-testkit" % akkaHttpVersion % "test"
     val akkaTestKit = "com.typesafe.akka" %% "akka-testkit" % akkaVersion % "test"
     val springBootTest = "org.springframework.boot" % "spring-boot-starter-test" % springBootVersion % "test"
     val akkaStreamTestKit = "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion % "test"
@@ -110,6 +111,7 @@ object Dependencies {
   }
 
   import Compile._
+
   val l = libraryDependencies
 
   val tensor = l ++= Seq(sprayJson, Test.scalaTest)
@@ -166,18 +168,20 @@ object Dependencies {
       def %(config: String): ScalaVersionDependentModuleID =
         ScalaVersionDependentModuleID(version => modules(version).map(_ % config))
     }
+
     object ScalaVersionDependentModuleID {
       implicit def liftConstantModule(mod: ModuleID): ScalaVersionDependentModuleID = versioned(_ => mod)
 
       def versioned(f: String => ModuleID): ScalaVersionDependentModuleID = ScalaVersionDependentModuleID(v => Seq(f(v)))
+
       def fromPF(f: PartialFunction[String, ModuleID]): ScalaVersionDependentModuleID =
         ScalaVersionDependentModuleID(version => if (f.isDefinedAt(version)) Seq(f(version)) else Nil)
     }
 
     /**
-      * Use this as a dependency setting if the dependencies contain both static and Scala-version
-      * dependent entries.
-      */
+     * Use this as a dependency setting if the dependencies contain both static and Scala-version
+     * dependent entries.
+     */
     def versionDependentDeps(modules: ScalaVersionDependentModuleID*): Def.Setting[Seq[librarymanagement.ModuleID]] =
       libraryDependencies ++= scalaVersion(version => modules.flatMap(m => m.modules(version))).value
 
@@ -187,7 +191,7 @@ object Dependencies {
       // 2.12.0-M1
       // 2.12.0-RC1
       // 2.12.0
-      case version @ ScalaVersion() => version
+      case version@ScalaVersion() => version
       // transforms 2.12.0-custom-version to 2.12.0
       case version => version.takeWhile(_ != '-')
     }

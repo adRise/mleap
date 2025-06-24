@@ -5,6 +5,7 @@ import ml.combust.bundle.{BundleRegistry, HasBundleRegistry}
 import ml.combust.mleap.ClassLoaderUtil
 import org.apache.hadoop.fs.FileSystem
 import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.classic.ClassicConversions.castToImpl
 
 /**
   * Created by hollinwilkins on 10/26/16.

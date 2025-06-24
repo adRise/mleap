@@ -1,7 +1,6 @@
 package ml.combust.mleap.spark
 
 import java.net.URI
-
 import ml.combust.bundle.dsl.Bundle
 import ml.combust.bundle.{BundleFile, BundleWriter}
 import ml.combust.mleap.core.types
@@ -10,10 +9,11 @@ import ml.combust.mleap.runtime.frame.Row
 import org.apache.spark.ml.Transformer
 import org.apache.spark.ml.bundle.SparkBundleContext
 import org.apache.spark.sql.DataFrame
+import org.apache.spark.sql.classic.ClassicConversions.castToImpl
 import org.apache.spark.sql.mleap.TypeConverters
 import org.apache.spark.sql.types.StructType
-import scala.util.Using
 
+import scala.util.Using
 import scala.util.Try
 
 /**

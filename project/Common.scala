@@ -18,16 +18,22 @@ object Common {
   lazy val defaultSettings = buildSettings ++ sonatypeSettings
 
   lazy val buildSettings: Seq[Def.Setting[_]] = Seq(
-    scalaVersion := "2.13.15",
-    crossScalaVersions := Seq("2.12.15", "2.13.15"),
-    releaseCrossBuild := true,
+    scalaVersion := "2.13.16",
     scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
     ThisBuild / libraryDependencySchemes +=
       "org.scala-lang.modules" %% "scala-collection-compat" % VersionScheme.Always,
     resolvers += Resolver.mavenLocal,
     resolvers += Resolver.jcenterRepo,
-    publish := codeArtifactPublish.value
+    publish := codeArtifactPublish.value,
+    javaOptions ++= Seq(
+      "--add-opens java.base/java.nio=ALL-UNNAMED"
+    ),
   )
+
+  Test / javaOptions ++= Seq(
+    "--add-opens java.base/java.nio=ALL-UNNAMED"
+  )
+
 
   lazy val mleapSettings: Seq[Def.Setting[_]] = Seq(organization := "ml.combust.mleap")
   lazy val bundleSettings: Seq[Def.Setting[_]] = Seq(organization := "ml.combust.bundle")
