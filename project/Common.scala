@@ -25,16 +25,16 @@ object Common {
     resolvers += Resolver.mavenLocal,
     resolvers += Resolver.jcenterRepo,
     publish := codeArtifactPublish.value,
-    javaOptions ++= Seq(
-      "--add-opens java.base/java.nio=ALL-UNNAMED"
-    ),
+    fork := true,
+    Test / javaOptions ++= Seq(
+      "--add-opens=java.base/java.nio=ALL-UNNAMED",
+      "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED",
+      "--add-opens=java.base/java.lang.invoke=ALL-UNNAMED",
+      "--add-opens=java.base/java.util=ALL-UNNAMED"
+    )
   )
-
-  Test / javaOptions ++= Seq(
-    "--add-opens java.base/java.nio=ALL-UNNAMED"
-  )
-
-
+  
+  Test / fork := true
   lazy val mleapSettings: Seq[Def.Setting[_]] = Seq(organization := "ml.combust.mleap")
   lazy val bundleSettings: Seq[Def.Setting[_]] = Seq(organization := "ml.combust.bundle")
 

@@ -24,7 +24,7 @@ class XGBoostRegressionModelParitySpec extends SparkParityBase {
   override val unserializedParams = Set("labelCol", "evalMetric", "objective")
 
   val dataset: DataFrame = {
-    import spark.sqlContext.implicits._
+    import spark.implicits._
 
     spark.sqlContext.sparkContext.textFile(this.getClass.getClassLoader.getResource("datasources/xgboost_training.csv").toString)
       .map(x => x.split(","))

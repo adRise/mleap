@@ -22,7 +22,7 @@ object Dependencies {
   lazy val awsSdkVersion = "1.12.470"
   lazy val scalaCollectionCompat = "2.12.0"
   val tensorflowJavaVersion = "1.1.0" // Match Tensorflow 2.10.1 https://github.com/tensorflow/java/#tensorflow-version-support
-  val xgboostVersion = "2.1.4"
+  val xgboostVersion = "2.0.3"
   val breezeVersion = "2.1.0"
   val hadoopVersion = "3.3.4" // matches spark version
   val platforms = "windows-x86_64,linux-x86_64,macosx-x86_64"
@@ -35,7 +35,8 @@ object Dependencies {
       "org.apache.spark" %% "spark-mllib" % sparkVersion,
       "org.apache.spark" %% "spark-mllib-local" % sparkVersion,
       "org.apache.spark" %% "spark-catalyst" % sparkVersion,
-      "org.apache.spark" %% "spark-avro" % sparkVersion
+      "org.apache.spark" %% "spark-avro" % sparkVersion,
+
     )
     val avroDep = "org.apache.avro" % "avro" % "1.12.0"
     val sprayJson = "io.spray" %% "spray-json" % "1.3.6"
@@ -46,7 +47,10 @@ object Dependencies {
     var tensorflowCoreApi = "org.tensorflow" % "tensorflow-core-api" % tensorflowJavaVersion
     val tensorflowProto = "org.tensorflow" % "proto" % "1.15.0"
     val tensorflowNative = "org.tensorflow" % "tensorflow-core-native" % tensorflowJavaVersion
-    val tensorflowDeps = Seq(tensorflowCoreApi, tensorflowProto, tensorflowNative)
+    val tensorflowPlatform = "org.tensorflow" % "tensorflow-core-platform" % tensorflowJavaVersion
+    val tensorflowFramework = "org.tensorflow" % "tensorflow-framework" % tensorflowJavaVersion
+
+    val tensorflowDeps = Seq(tensorflowCoreApi, tensorflowProto, tensorflowNative, tensorflowPlatform, tensorflowFramework)
     val akkaTestKit = "com.typesafe.akka" %% "akka-testkit" % akkaVersion
     val akkaStreamTestKit = "com.typesafe.akka" %% "akka-stream-testkit" % akkaVersion
 

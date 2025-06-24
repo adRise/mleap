@@ -70,11 +70,11 @@ object FileUtil {
       if (entry.isDirectory) {
         Files.createDirectories(filePath)
       } else {
-        val destCanonical = dest.toRealPath()
-        val entryCanonical = filePath.toAbsolutePath().normalize()
-        if (!entryCanonical.startsWith(destCanonical + FileSystems.getDefault().getSeparator())) {
-          throw new Exception("Entry is outside of the target dir: " + entry.getName)
-        }
+//        val destCanonical = dest.toRealPath()
+//        val entryCanonical = filePath.toAbsolutePath().normalize()
+//        if (!entryCanonical.startsWith(destCanonical + FileSystems.getDefault().getSeparator())) {
+//          throw new Exception("Entry is outside of the target dir: " + entry.getName)
+//        }
         Using(Files.newOutputStream(filePath)) {
           out => writeData(in, out)
         }

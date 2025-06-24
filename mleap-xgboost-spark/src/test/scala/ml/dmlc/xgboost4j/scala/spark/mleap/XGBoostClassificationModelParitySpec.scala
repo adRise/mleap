@@ -15,7 +15,7 @@ case class PowerPlantTableForClassifier(AT: Double, V : Double, AP : Double, RH 
 class XGBoostClassificationModelParitySpec extends SparkParityBase {
 
   val dataset: DataFrame = {
-    import spark.sqlContext.implicits._
+    import spark.implicits._
 
     spark.sqlContext.sparkContext.textFile(this.getClass.getClassLoader.getResource("datasources/xgboost_training.csv").toString)
       .map(x => x.split(","))

@@ -18,8 +18,7 @@ object Release {
       commitReleaseVersion,
       tagRelease,
       publishArtifacts,
-      releaseStepCommand("sonatypeRelease"),
-      releaseStepTask(MleapProject.serving / autoImport.Docker / publish ),
+      releaseStepTask( publish),
       setNextVersion,
       commitNextVersion,
       pushChanges

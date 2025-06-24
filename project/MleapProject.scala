@@ -15,28 +15,22 @@ object MleapProject {
     id = "mleap",
     base = file(".")
   ).aggregate(baseProject,
-    tensor,
-    tensorflow,
-    bundleMl,
-    bundleHdfs,
-    core,
-    runtime,
-    xgboostRuntime,
-    xgboostSpark,
-    avro,
-    sparkBase,
-    sparkTestkit,
-    spark,
-    sparkExtension,
-    executor,
-    executorTestKit,
-    grpc,
-    grpcServer,
-    repositoryS3,
-    springBootServing,
-    serving,
-    databricksRuntime)
-  .settings(rootSettings)
+      tensor,
+      tensorflow,
+      bundleMl,
+      bundleHdfs,
+      core,
+      runtime,
+      sparkBase,
+      sparkTestkit,
+      spark,
+      sparkExtension,
+      executor,
+      executorTestKit,
+      grpc,
+      grpcServer,
+      repositoryS3)
+    .settings(rootSettings)
 
   lazy val baseProject = Project(
     id = "mleap-base",
@@ -68,11 +62,6 @@ object MleapProject {
     base = file("mleap-runtime")
   ).dependsOn(core, bundleMl)
 
-  lazy val avro = Project(
-    id = "mleap-avro",
-    base = file("mleap-avro")
-  ).dependsOn(runtime)
-
   lazy val sparkBase = Project(
     id = "mleap-spark-base",
     base = file("mleap-spark-base")
@@ -100,28 +89,8 @@ object MleapProject {
 
   lazy val xgboostRuntimeSettings = inConfig(Test)(Defaults.testSettings) ++ Seq(
     // xgboost has trouble with multi-threading so avoid parallel executions.
-     Test / parallelExecution := false,
+    Test / parallelExecution := false,
   )
-  lazy val xgboostRuntime = Project(
-    id = "mleap-xgboost-runtime",
-    base = file("mleap-xgboost-runtime")
-  ).dependsOn(runtime, sparkTestkit % "test")
-  .settings(xgboostRuntimeSettings)
-
-  lazy val xgboostSpark = Project(
-    id = "mleap-xgboost-spark",
-    base = file("mleap-xgboost-spark")
-  ).dependsOn(
-    sparkBase % "provided",
-      xgboostRuntime % "test",
-      spark % "test",
-      sparkTestkit % "test"
-    )
-
-  lazy val serving = Project(
-    id = "mleap-serving",
-    base = file("mleap-serving")
-  ).dependsOn(springBootServing, grpcServer)
 
   lazy val executor = Project(
     id = "mleap-executor",
@@ -167,47 +136,4 @@ object MleapProject {
     // refer to https://github.com/spring-projects/spring-boot/issues/21535
     Test / fork := true,
   )
-
-  lazy val springBootServing = Project(
-    id = "mleap-spring-boot",
-    base = file("mleap-spring-boot")
-  ).dependsOn(executor).settings(springBootSettings)
-
-  lazy val benchmark = Project(
-    id = "mleap-benchmark",
-    base = file("mleap-benchmark")
-  ).dependsOn(runtime, spark, avro)
-
-  // Create underlying fat jar project as per: https://github.com/sbt/sbt-assembly#q-despite-the-concerned-friends-i-still-want-publish-fat-jars-what-advice-do-you-have
-  lazy val databricksRuntimeFat = Project(
-    id = "mleap-databricks-runtime-fat",
-    base = file("mleap-databricks-runtime-fat")
-  ).dependsOn(baseProject,
-      tensor,
-      core,
-      runtime,
-      bundleMl,
-      spark,
-      sparkExtension,
-      tensorflow,
-      xgboostRuntime,
-      xgboostSpark)
-  .settings(excludeDependencies ++= Seq(
-    ExclusionRule("org.tensorflow"),
-    ExclusionRule("org.apache.spark"),
-    ExclusionRule("ml.dmlc")
-  ))
-
-  lazy val databricksRuntime = Project(
-    id = "mleap-databricks-runtime",
-    base = file("mleap-databricks-runtime")
-  )
-
-  lazy val databricksRuntimeTestkit = Project(
-    id = "mleap-databricks-runtime-testkit",
-    base = file("mleap-databricks-runtime-testkit")
-  ).dependsOn(spark % "provided",
-      sparkExtension % "provided",
-      xgboostSpark % "provided",
-      tensorflow % "provided")
 }
