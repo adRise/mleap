@@ -19,7 +19,21 @@ object Common {
 
   lazy val buildSettings: Seq[Def.Setting[_]] = Seq(
     scalaVersion := "2.13.16",
-    scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature"),
+    javacOptions ++= Seq("-source", "17", "-target", "17"),
+    scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-release", "17"),
+    Test / fork := true,
+    javaOptions ++= Seq(
+      "--add-opens", "java.base/java.nio=ALL-UNNAMED",
+      "--add-opens", "java.base/java.lang=ALL-UNNAMED",
+      "--add-opens", "java.base/java.lang.invoke=ALL-UNNAMED",
+      "--add-opens", "java.base/java.util=ALL-UNNAMED"
+    ),
+    Test / javaOptions ++= Seq(
+      "--add-opens", "java.base/java.nio=ALL-UNNAMED",
+      "--add-opens", "java.base/java.lang=ALL-UNNAMED",
+      "--add-opens", "java.base/java.lang.invoke=ALL-UNNAMED",
+      "--add-opens", "java.base/java.util=ALL-UNNAMED"
+    ),
     ThisBuild / libraryDependencySchemes +=
       "org.scala-lang.modules" %% "scala-collection-compat" % VersionScheme.Always,
     resolvers += Resolver.mavenLocal,

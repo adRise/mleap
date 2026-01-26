@@ -52,7 +52,12 @@ public class JavaDSLSpec {
             new NodeShape(new ListMap<>(), new ListMap<>()).
                     withInput("input0", "string").
                     withOutput("output0","string_index"),
-            new StringIndexerModel(CollectionConverters.asScala(Collections.singletonList(CollectionConverters.asScala(Collections.singletonList("hello")).toSeq())).toSeq(),
+            new StringIndexerModel(
+                    scala.jdk.javaapi.CollectionConverters.asScala(
+                        Collections.singletonList(
+                            scala.jdk.javaapi.CollectionConverters.asScala(Collections.singletonList("hello")).toSeq()
+                        )
+                    ).toSeq(),
                     HandleInvalid.Error$.MODULE$));
 
     DefaultLeapFrame buildFrame() {
@@ -117,7 +122,7 @@ public class JavaDSLSpec {
     @Test
     public void createTensorFieldWithDimension() {
         StructField tensorField = frameBuilder.createField("tensor", frameBuilder.createTensor(frameBuilder.createBasicByte(), Arrays.asList(1, 2), true));
-        assertEquals(((TensorType)tensorField.dataType()).dimensions().get(), CollectionConverters.asScala(Arrays.asList(1, 2)).toSeq());
+        assertEquals(((TensorType)tensorField.dataType()).dimensions().get(), CollectionConverters.asScala(Arrays.asList(1, 2)));
     }
 
     @Test

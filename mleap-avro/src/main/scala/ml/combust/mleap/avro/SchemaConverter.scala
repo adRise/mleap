@@ -120,8 +120,8 @@ object SchemaConverter {
   implicit def avroToMleap(schema: Schema)
                           (implicit context: MleapContext): StructType = schema.getType match {
     case Schema.Type.RECORD =>
-      val fields = schema.getFields.asScala.map(avroToMleapField)
-      StructType(fields.toSeq).get
+      val fields = schema.getFields.asScala.map(avroToMleapField).toSeq
+      StructType(fields).get
     case _ => throw new IllegalArgumentException("invalid avro record type")
   }
 

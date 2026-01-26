@@ -7,15 +7,15 @@ import scala.collection.mutable
   * Created by hollinwilkins on 10/5/17.
   */
 object ArrayRow {
-  def apply(values: Seq[Any]): ArrayRow = new ArrayRow(mutable.WrappedArray.make[Any](values.toArray))
+  def apply(values: Seq[Any]): ArrayRow = new ArrayRow(mutable.ArraySeq.make[Any](values.toArray))
 }
 
 /** Class for holding Row values in an array.
   *
   * @param values array of values in row
   */
-case class ArrayRow(values: mutable.WrappedArray[Any]) extends Row {
-  def this(values: java.lang.Iterable[Any]) = this(values.asScala.toArray)
+case class ArrayRow(values: mutable.ArraySeq[Any]) extends Row {
+  def this(values: java.lang.Iterable[Any]) = this(mutable.ArraySeq.make[Any](values.asScala.toArray))
 
   override def getRaw(index: Int): Any = values(index)
 

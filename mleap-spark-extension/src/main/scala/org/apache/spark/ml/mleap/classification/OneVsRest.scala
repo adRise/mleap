@@ -356,7 +356,7 @@ final class OneVsRest @Since("1.4.0") (
     }
 
     // create k columns, one for each binary classifier.
-    val models = (0 until numClasses).par.map { index =>
+    val models = Range(0, numClasses).map { index =>
       // generate new label metadata for the binary problem.
       val newLabelMeta = BinaryAttribute.defaultAttr.withName("label").toMetadata()
       val labelColName = "mc2b$" + index
