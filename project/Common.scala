@@ -4,7 +4,7 @@ import sbt.*
 import Keys.*
 import com.jsuereth.sbtpgp.SbtPgp.autoImport.*
 import com.jsuereth.sbtpgp.PgpKeys.*
-import com.tubitv.sbt_global_settings.TubiCodeArtifactPlugin.autoImport.codeArtifactPublish
+import codeartifact.CodeArtifactKeys.codeArtifactPublish
 import sbtrelease.ReleasePlugin.autoImport.*
 import xerial.sbt.Sonatype.autoImport.*
 
