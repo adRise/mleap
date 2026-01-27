@@ -4,7 +4,6 @@ import sbt.*
 import Keys.*
 import com.jsuereth.sbtpgp.SbtPgp.autoImport.*
 import com.jsuereth.sbtpgp.PgpKeys.*
-import com.tubitv.sbt_global_settings.TubiCodeArtifactPlugin.autoImport.codeArtifactPublish
 import sbtrelease.ReleasePlugin.autoImport.*
 import xerial.sbt.Sonatype.autoImport.*
 
@@ -24,7 +23,6 @@ object Common {
       "org.scala-lang.modules" %% "scala-collection-compat" % VersionScheme.Always,
     resolvers += Resolver.mavenLocal,
     resolvers += Resolver.jcenterRepo,
-    publish := codeArtifactPublish.value,
     fork := true,
     Test / javaOptions ++= Seq(
       "--add-opens=java.base/java.nio=ALL-UNNAMED",
