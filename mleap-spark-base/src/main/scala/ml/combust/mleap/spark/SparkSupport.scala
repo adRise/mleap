@@ -9,7 +9,6 @@ import ml.combust.mleap.runtime.frame.Row
 import org.apache.spark.ml.Transformer
 import org.apache.spark.ml.bundle.SparkBundleContext
 import org.apache.spark.sql.DataFrame
-import org.apache.spark.sql.classic.ClassicConversions.castToImpl
 import org.apache.spark.sql.mleap.TypeConverters
 import org.apache.spark.sql.types.StructType
 
