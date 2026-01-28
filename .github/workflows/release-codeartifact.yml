@@ -4,11 +4,6 @@ run-name: Release MLeap to Tubi CodeArtifact
 
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to release from'
-        required: true
-        default: 'master'
 
 jobs:
   release:
@@ -22,7 +17,6 @@ jobs:
       - name: Clone and checkout
         uses: actions/checkout@v3.5.2
         with:
-          ref: ${{ github.event.inputs.branch }}
           fetch-depth: 0
           submodules: recursive
 
@@ -39,7 +33,7 @@ jobs:
 
           # Determine final version and target repo based on branch
           # Add -tubi suffix to differentiate from official Maven Central releases
-          BRANCH="${{ github.event.inputs.branch }}"
+          BRANCH="${{ github.ref_name }}"
           if [ "$BRANCH" == "master" ]; then
             FINAL_VERSION="${BASE_VERSION}-tubi"
             REPO_NAME="maven-jvm"
@@ -75,7 +69,7 @@ jobs:
       - name: Summary
         run: |
           echo "## Release Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- **Branch:** ${{ github.event.inputs.branch }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Base Version:** ${{ steps.version.outputs.base-version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Published Version:** ${{ steps.version.outputs.final-version }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Repository:** ${{ steps.version.outputs.repo-name }}" >> $GITHUB_STEP_SUMMARY
