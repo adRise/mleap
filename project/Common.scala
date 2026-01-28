@@ -5,16 +5,15 @@ import Keys._
 import com.jsuereth.sbtpgp.SbtPgp.autoImport._
 import com.jsuereth.sbtpgp.PgpKeys._
 import sbtrelease.ReleasePlugin.autoImport._
-import xerial.sbt.Sonatype.autoImport._
 
 object Common {
-  lazy val defaultMleapSettings = defaultSettings ++ mleapSettings ++ sonatypeSettings
-  lazy val defaultBundleSettings = defaultSettings ++ bundleSettings ++ sonatypeSettings
-  lazy val defaultMleapXgboostSparkSettings = defaultMleapSettings ++ sonatypeSettings
+  lazy val defaultMleapSettings = defaultSettings ++ mleapSettings ++ publishSettings
+  lazy val defaultBundleSettings = defaultSettings ++ bundleSettings ++ publishSettings
+  lazy val defaultMleapXgboostSparkSettings = defaultMleapSettings ++ publishSettings
   lazy val defaultMleapServingSettings = defaultMleapSettings ++ noPublishSettings
 
 
-  lazy val defaultSettings = buildSettings ++ sonatypeSettings
+  lazy val defaultSettings = buildSettings ++ publishSettings
 
   lazy val buildSettings: Seq[Def.Setting[_]] = Seq(
     scalaVersion := "2.13.16",
@@ -56,17 +55,10 @@ object Common {
     publishTo := None
   )
 
-  lazy val sonatypeSettings: Seq[Def.Setting[_]] = Seq(
-    sonatypeProfileName := "ml.combust",
-    releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+  // Publishing to CodeArtifact - URL is configured via sbt-global-settings in CI
+  // For local development/tests, publishTo is None (skip publishing)
+  lazy val publishSettings: Seq[Def.Setting[_]] = Seq(
     publishMavenStyle := true,
-    publishTo := Some({
-      if (isSnapshot.value) {
-        Opts.resolver.sonatypeOssSnapshots.head
-      } else {
-        Opts.resolver.sonatypeStaging
-      }
-    }),
     Test / publishArtifact := false,
     pomIncludeRepository := { _ => false },
     licenses := Seq("Apache 2.0 License" -> url("http://www.apache.org/licenses/LICENSE-2.0.html")),
