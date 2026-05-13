@@ -11,6 +11,12 @@ jobs:
     name: MLeap executor tests
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+        with:
+          use-policy-store: true
+          api-key: ${{ secrets.STEP_SECURITY_API_KEY }}
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -36,6 +42,12 @@ jobs:
     name: MLeap benchmark tests
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+        with:
+          use-policy-store: true
+          api-key: ${{ secrets.STEP_SECURITY_API_KEY }}
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -61,6 +73,12 @@ jobs:
     name: All other sbt tests
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+        with:
+          use-policy-store: true
+          api-key: ${{ secrets.STEP_SECURITY_API_KEY }}
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -86,6 +104,12 @@ jobs:
     name: Python 3.7 tests
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+        with:
+          use-policy-store: true
+          api-key: ${{ secrets.STEP_SECURITY_API_KEY }}
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -111,6 +135,12 @@ jobs:
     name: Python 3.8 tests
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+        with:
+          use-policy-store: true
+          api-key: ${{ secrets.STEP_SECURITY_API_KEY }}
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -136,6 +166,12 @@ jobs:
     name: Python 3.9 tests
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+        with:
+          use-policy-store: true
+          api-key: ${{ secrets.STEP_SECURITY_API_KEY }}
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -161,6 +197,12 @@ jobs:
     name: Python 3.10 tests
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+        with:
+          use-policy-store: true
+          api-key: ${{ secrets.STEP_SECURITY_API_KEY }}
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -186,6 +228,12 @@ jobs:
     name: Python 3.11 tests
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+        with:
+          use-policy-store: true
+          api-key: ${{ secrets.STEP_SECURITY_API_KEY }}
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -211,6 +259,12 @@ jobs:
     name: Python 3.12 tests
     runs-on: ubuntu-latest
     steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+        with:
+          use-policy-store: true
+          api-key: ${{ secrets.STEP_SECURITY_API_KEY }}
+
       - uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -237,6 +291,12 @@ jobs:
     needs: [mleap-executor-tests, mleap-benchmark-tests, mleap-sbt-tests, python37-tests, python38-tests, python39-tests, python310-tests, python311-tests, python312-tests]
     if: always() # Required so this runs even if a dependency fails
     steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@a5ad31d6a139d249332a2605b85202e8c0b78450 # v2.19.1
+        with:
+          use-policy-store: true
+          api-key: ${{ secrets.STEP_SECURITY_API_KEY }}
+
       - name: Check overall status
         if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
         run: exit 1
